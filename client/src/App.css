@@ -1,38 +1,106 @@
-.App {
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Navigation */
+.navbar {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  margin-right: 1rem;
+  font-weight: 600;
+}
+
+.nav-links {
+  margin-left: auto;
+}
+
+/* Hero section */
+.home-container {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.hero-section {
+  background-color: #fff;
+  padding: 3rem 2rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.hero-section h1 {
+  margin-bottom: 1rem;
+  color: #b22262; /* A pinkish shade */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.hero-section p {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.hero-buttons {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 1rem;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 2rem;
 }
 
-.App-link {
-  color: #61dafb;
+.diagnose-btn,
+.learnmore-btn {
+  background-color: #b22262; /* Pinkish color */
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 4px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.learnmore-btn {
+  background-color: #555;
+}
+
+/* Features section */
+.features-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  background-color: #f4f4f4;
+  padding: 2rem;
+}
+
+.feature-card {
+  background-color: #fff;
+  border-radius: 8px;
+  flex: 1 1 200px;
+  margin: 0.5rem;
+  padding: 1rem;
+  min-width: 250px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card h2 {
+  color: #b22262;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 2rem;
+  background-color: #fff;
+}
+
+.cta-section h2 {
+  margin-bottom: 1rem;
+  color: #b22262;
+}
+
+.cta-section p {
+  margin-bottom: 1.5rem;
 }
