@@ -7,7 +7,6 @@ import About from "./components/About";
 function App() {
   return (
     <Router>
-      {/* Simple navigation (no login/signup) */}
       <nav className="navbar">
         <Link to="/">Breava</Link>
         <div className="nav-links">
