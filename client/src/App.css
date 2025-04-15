@@ -106,7 +106,7 @@ body {
 }
 
 
-/* Diagnose Page Container */
+/* Diagnose Page Styles */
 .diagnose-container {
   max-width: 700px;
   margin: 2rem auto;
@@ -116,64 +116,40 @@ body {
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-
-.diagnose-container h1 {
-  margin-bottom: 1rem;
-  color: #b22262;
-}
-
-/* Upload Box */
 .upload-box {
   margin-top: 1rem;
   padding: 1rem;
 }
-
-/* Drag & Drop Area */
 .drag-drop-area {
   border: 2px dashed #ccc;
   border-radius: 8px;
   padding: 2rem;
   margin: 1rem auto;
   max-width: 500px;
-  position: relative;
 }
-
 .drag-drop-text {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
-
 .drag-drop-formats {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 1rem;
 }
-
-/* Browse Button (file input) */
 .browse-btn {
-  background-color: #b22262; /* Pinkish color */
+  background-color: #b22262;
   color: #fff;
   padding: 0.8rem 1.2rem;
   cursor: pointer;
   font-weight: 600;
   border-radius: 4px;
-  text-decoration: none;
-  display: inline-block;
   transition: background-color 0.3s ease;
 }
-
 .browse-btn:hover {
   background-color: #9e1e58;
 }
-
-/* Hidden input inside label */
-.browse-btn input[type="file"] {
-  display: none;
-}
-
-/* Submit Button */
 .submit-btn {
-  background-color: #b22262; /* Pinkish color */
+  background-color: #b22262;
   color: #fff;
   border: none;
   padding: 0.8rem 1.5rem;
@@ -183,11 +159,52 @@ body {
   margin-top: 1rem;
   transition: background-color 0.3s ease;
 }
-
 .submit-btn:hover {
   background-color: #9e1e58;
 }
 
+/* Result Page Styles */
+.result-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.back-btn {
+  background-color: #b22262;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 4px;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+.back-btn:hover {
+  background-color: #9e1e58;
+}
+
+/* Records Page Styles */
+.records-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.records-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+.records-container li {
+  border-bottom: 1px solid #ccc;
+  padding: 0.5rem 0;
+}
 
 
 /* About Page Container */
