@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
+require('dotenv').config();
+
 
 // Initialize express app
 const app = express();
@@ -67,17 +69,17 @@ app.post("/api/diagnose", upload.single("file"), async (req, res) => {
 });
 
 // Get All Diagnosis Records
-app.get("/api/records", (req, res) => {
-  Record.find()
-    .sort({ createdAt: -1 })
-    .exec((err, records) => {
-      if (err) {
-        console.error("Error fetching records:", err);
-        return res.status(500).json({ error: "Failed to fetch records" });
-      }
-      res.json(records);
-    });
+app.get("/api/records", async (req, res) => {
+  try {
+    const records = await Record.find().sort({ createdAt: -1 }).exec();
+    res.json(records);
+  } catch (err) {
+    console.error("Error fetching records:", err);
+    res.status(500).json({ error: "Failed to fetch records" });
+  }
 });
+
+
 
 // -------------------------
 // Start the Server

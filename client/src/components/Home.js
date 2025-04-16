@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -11,8 +12,12 @@ function Home() {
           detection.
         </p>
         <div className="hero-buttons">
-          <button className="diagnose-btn">Start Free Diagnose</button>
-          <button className="learnmore-btn">Learn More</button>
+          <Link to="/diagnose">
+            <button className="diagnose-btn">Start Free Diagnose</button>
+          </Link>
+          <Link to="/about">
+            <button className="learnmore-btn">Learn More</button>
+          </Link>
         </div>
       </header>
 
@@ -43,7 +48,9 @@ function Home() {
       <section className="cta-section">
         <h2>Take the First Step Towards Early Detection</h2>
         <p>Our platform is designed to support you every step of the way.</p>
-        <button className="diagnose-btn">Start Free Diagnose</button>
+        <Link to="/diagnose">
+          <button className="diagnose-btn">Start Free Diagnose</button>
+        </Link>
       </section>
     </div>
   );

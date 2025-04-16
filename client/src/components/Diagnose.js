@@ -6,7 +6,9 @@ function Diagnose() {
   const navigate = useNavigate();
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -38,19 +40,30 @@ function Diagnose() {
       <div className="upload-box">
         <h2>Upload Files</h2>
         <p>Select and upload the files of your choice</p>
+
         <div className="drag-drop-area">
-          <p className="drag-drop-text">Choose a file or drag &amp; drop it here</p>
-          <p className="drag-drop-formats">JPEG, PNG, PDF, and MP4 formats, up to 500MB</p>
+          {/* Conditionally show the file name if one is selected */}
+          {selectedFile ? (
+            <p className="file-name">{selectedFile.name}</p>
+          ) : (
+            <p className="drag-drop-text">
+              Choose a file or drag &amp; drop it here
+            </p>
+          )}
+          <p className="drag-drop-formats">
+            JPEG, PNG, PDF, and MP4 formats, up to 500MB
+          </p>
           <label className="browse-btn">
             Browse File
             <input
               type="file"
-              name="file"              // <-- Added name attribute
+              name="file"
               onChange={handleFileChange}
               style={{ display: "none" }}
             />
           </label>
         </div>
+
         <button className="submit-btn" onClick={handleSubmit}>
           Submit for Analysis
         </button>
