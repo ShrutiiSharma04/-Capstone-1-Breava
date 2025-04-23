@@ -2,8 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
-require('dotenv').config();
+require("dotenv").config();
 
+const auth = require("./middleware/auth");
+const authRoutes = require("./routes/auth");
 
 // Initialize express app
 const app = express();
@@ -26,7 +28,7 @@ mongoose.connection.on("error", (err) => {
 });
 
 // -------------------------
-// Define a Mongoose Model
+// Define Record Model
 // -------------------------
 const recordSchema = new mongoose.Schema({
   filename: String,
@@ -41,45 +43,51 @@ const Record = mongoose.model("Record", recordSchema);
 const upload = multer({ dest: "uploads/" });
 
 // -------------------------
-// API Endpoints
+// Auth Routes
 // -------------------------
+app.use("/api/auth", authRoutes);
 
-// Test Route
+// -------------------------
+// Public Test Route
+// -------------------------
 app.get("/api", (req, res) => {
   res.json({ message: "Hello from the server!" });
 });
 
-// Demo Diagnose Endpoint
-app.post("/api/diagnose", upload.single("file"), async (req, res) => {
-  // Simulate a model by randomly returning "malignant" or "benign"
-  const result = Math.random() < 0.5 ? "malignant" : "benign";
-  const filename = req.file ? req.file.originalname : "unknown_file";
+// -------------------------
+// Protected Diagnose Endpoint
+// -------------------------
+app.post(
+  "/api/diagnose",
+  auth,
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      const result = Math.random() < 0.5 ? "malignant" : "benign";
+      const filename = req.file ? req.file.originalname : "unknown_file";
 
-  // Save record to MongoDB
-  const newRecord = new Record({ filename, result });
-  newRecord.save()
-  .then(() => {
-    res.json({ result });
-  })
-  .catch((err) => {
-    console.error("Error saving record:", err);
-    res.status(500).json({ error: "Failed to save record" });
-  });
+      const newRecord = new Record({ filename, result });
+      await newRecord.save();
+      res.json({ result });
+    } catch (err) {
+      console.error("Error saving record:", err);
+      res.status(500).json({ error: "Failed to save record" });
+    }
+  }
+);
 
-});
-
-// Get All Diagnosis Records
-app.get("/api/records", async (req, res) => {
+// -------------------------
+// Protected Get All Diagnosis Records
+// -------------------------
+app.get("/api/records", auth, async (req, res) => {
   try {
-    const records = await Record.find().sort({ createdAt: -1 }).exec();
+    const records = await Record.find().sort({ createdAt: -1 });
     res.json(records);
   } catch (err) {
     console.error("Error fetching records:", err);
     res.status(500).json({ error: "Failed to fetch records" });
   }
 });
-
-
 
 // -------------------------
 // Start the Server
