@@ -1,6 +1,5 @@
-// src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
@@ -8,10 +7,12 @@ import Home from './pages/Home';
 import Diagnose from './pages/Diagnose';
 import About from './pages/About';
 import Records from './pages/Records';
+import Result from './pages/Result';
 
+// Layout handles navbar visibility and logout button
 function Layout() {
+  const { isLoggedIn, logout } = useContext(AuthContext);
   const location = useLocation();
-  // hide nav on these paths:
   const isAuthPage = ['/signin', '/signup'].includes(location.pathname);
 
   return (
@@ -23,41 +24,36 @@ function Layout() {
             <Link to="/diagnose">Diagnose</Link>
             <Link to="/about">About</Link>
             <Link to="/records">Records</Link>
-            <Link to="/signin">Sign In</Link>
-            <Link to="/signup">Sign Up</Link>
+            {isLoggedIn ? (
+              <button onClick={logout}>Logout</button>
+            ) : (
+              <>
+                <Link to="/signin">Sign In</Link>
+                <Link to="/signup">Sign Up</Link>
+              </>
+            )}
           </div>
         </nav>
       )}
       <Routes>
-        {/* Public pages */}
+        {/* Public routes */}
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Protected pages */}
-        <Route
-          path="/"
-          element={<ProtectedRoute element={Home} />}
-        />
-        <Route
-          path="/diagnose"
-          element={<ProtectedRoute element={Diagnose} />}
-        />
-        <Route
-          path="/about"
-          element={<ProtectedRoute element={About} />}
-        />
-        <Route
-          path="/records"
-          element={<ProtectedRoute element={Records} />}
-        />
+        {/* Protected routes */}
+        <Route path="/" element={<ProtectedRoute element={Home} />} />
+        <Route path="/diagnose" element={<ProtectedRoute element={Diagnose} />} />
+        <Route path="/about" element={<ProtectedRoute element={About} />} />
+        <Route path="/records" element={<ProtectedRoute element={Records} />} />
+        <Route path="/result" element={<ProtectedRoute element={Result} />} />
       </Routes>
     </>
-  )
+  );
 }
 
+// Redirects unauthenticated users
 function ProtectedRoute({ element: Element }) {
-  const { isLoggedIn, loading } = React.useContext(AuthContext);
-  if (loading) return <div>Loading...</div>;
+  const { isLoggedIn } = useContext(AuthContext);
   return isLoggedIn ? <Element /> : <Navigate to="/signin" replace />;
 }
 

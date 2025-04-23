@@ -1,48 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function Diagnose() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [error, setError] = useState("");
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleFileChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
+  const handleFileChange = (e) => {
+    setError("");
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!selectedFile) {
-      alert("Please select a file.");
+      setError("Please select a file.");
       return;
     }
+    if (!token) {
+      setError("You must be signed in to diagnose.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", selectedFile);
 
     try {
       const response = await fetch("http://localhost:5000/api/diagnose", {
         method: "POST",
+        headers: {
+          "x-auth-token": token
+        },
         body: formData,
       });
+
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+
       const data = await response.json();
-      // Navigate to Result page with the diagnosis result
       navigate("/result", { state: { result: data.result } });
-    } catch (error) {
-      console.error("Error during diagnosis:", error);
-      alert("There was an error processing your request.");
+    } catch (err) {
+      console.error("Error during diagnosis:", err);
+      setError(err.message || "There was an error processing your request.");
     }
   };
 
   return (
     <div className="diagnose-container">
       <h1>Breast Cancer Diagnosis</h1>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <div className="upload-box">
         <h2>Upload Files</h2>
         <p>Select and upload the files of your choice</p>
 
         <div className="drag-drop-area">
-          {/* Conditionally show the file name if one is selected */}
           {selectedFile ? (
             <p className="file-name">{selectedFile.name}</p>
           ) : (
