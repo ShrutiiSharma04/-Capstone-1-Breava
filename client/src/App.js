@@ -1,32 +1,68 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Home from "./components/Home";
-import Diagnose from "./components/Diagnose";
-import About from "./components/About";
-import Result from "./components/Result";
-import Records from "./components/Records";
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
+import { AuthProvider, AuthContext } from './context/AuthContext';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import Home from './pages/Home';
+import Diagnose from './pages/Diagnose';
+import About from './pages/About';
+import Records from './pages/Records';
+import Result from './pages/Result';
 
-function App() {
+// Layout handles navbar visibility and logout button
+function Layout() {
+  const { isLoggedIn, logout } = useContext(AuthContext);
+  const location = useLocation();
+  const isAuthPage = ['/signin', '/signup'].includes(location.pathname);
+
   return (
-    <Router>
-      <nav className="navbar">
-        <Link to="/">Breava</Link>
-        <div className="nav-links">
-          <Link to="/diagnose">Diagnose</Link>
-          <Link to="/about">About</Link>
-          <Link to="/records">Records</Link>
-        </div>
-      </nav>
-
+    <>
+      {!isAuthPage && (
+        <nav className="navbar">
+          <Link to="/">Breava</Link>
+          <div className="nav-links">
+            <Link to="/diagnose">Diagnose</Link>
+            <Link to="/about">About</Link>
+            <Link to="/records">Records</Link>
+            {isLoggedIn ? (
+              <button onClick={logout}>Logout</button>
+            ) : (
+              <>
+                <Link to="/signin">Sign In</Link>
+                <Link to="/signup">Sign Up</Link>
+              </>
+            )}
+          </div>
+        </nav>
+      )}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/diagnose" element={<Diagnose />} />
-        <Route path="/result" element={<Result />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/records" element={<Records />} />
+        {/* Public routes */}
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        {/* Protected routes */}
+        <Route path="/" element={<ProtectedRoute element={Home} />} />
+        <Route path="/diagnose" element={<ProtectedRoute element={Diagnose} />} />
+        <Route path="/about" element={<ProtectedRoute element={About} />} />
+        <Route path="/records" element={<ProtectedRoute element={Records} />} />
+        <Route path="/result" element={<ProtectedRoute element={Result} />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+// Redirects unauthenticated users
+function ProtectedRoute({ element: Element }) {
+  const { isLoggedIn } = useContext(AuthContext);
+  return isLoggedIn ? <Element /> : <Navigate to="/signin" replace />;
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Layout />
+      </Router>
+    </AuthProvider>
+  );
+}

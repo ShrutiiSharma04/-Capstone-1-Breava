@@ -4,7 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 function Result() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { result } = location.state || { result: "unknown" };
+  // fall back to 'unknown' if nothing was passed
+  const { result = "unknown" } = location.state || {};
 
   return (
     <div className="result-container">
