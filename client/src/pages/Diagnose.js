@@ -1,16 +1,18 @@
+// src/pages/Diagnose.js
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 
-function Diagnose() {
+export default function Diagnose() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [error, setError] = useState("");
-  const { token } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [error, setError]               = useState("");
+  const { isLoggedIn }                  = useContext(AuthContext);
+  const navigate                        = useNavigate();
 
   const handleFileChange = (e) => {
     setError("");
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       setSelectedFile(e.target.files[0]);
     }
   };
@@ -21,7 +23,7 @@ function Diagnose() {
       setError("Please select a file.");
       return;
     }
-    if (!token) {
+    if (!isLoggedIn) {
       setError("You must be signed in to diagnose.");
       return;
     }
@@ -30,23 +32,16 @@ function Diagnose() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await fetch("http://localhost:5000/api/diagnose", {
-        method: "POST",
-        headers: {
-          "x-auth-token": token
-        },
-        body: formData,
+      // axios.defaults.baseURL = http://localhost:5000
+      // x-auth-token header is attached automatically by AuthContext
+      const res = await axios.post("/api/diagnose", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}`);
-      }
-
-      const data = await response.json();
-      navigate("/result", { state: { result: data.result } });
+      navigate("/result", { state: { result: res.data.result } });
     } catch (err) {
       console.error("Error during diagnosis:", err);
-      setError(err.message || "There was an error processing your request.");
+      setError(err.response?.data?.error || err.message);
     }
   };
 
@@ -63,12 +58,10 @@ function Diagnose() {
             <p className="file-name">{selectedFile.name}</p>
           ) : (
             <p className="drag-drop-text">
-              Choose a file or drag &amp; drop it here
+              Choose a file or drag & drop it here
             </p>
           )}
-          <p className="drag-drop-formats">
-            .CSV files only
-          </p>
+          <p className="drag-drop-formats">.CSV files only</p>
           <label className="browse-btn">
             Browse File
             <input
@@ -87,5 +80,3 @@ function Diagnose() {
     </div>
   );
 }
-
-export default Diagnose;

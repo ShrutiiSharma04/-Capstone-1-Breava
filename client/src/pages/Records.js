@@ -1,57 +1,45 @@
-// src/components/Records.js
+// src/pages/Records.js
 import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Records() {
-  const { token } = useContext(AuthContext);
+  const { user, isLoggedIn } = useContext(AuthContext);
   const [records, setRecords] = useState([]);
-  const [error, setError]     = useState(null);
+  const [error, setError]     = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecords = async () => {
-      if (!token) {
+      if (!isLoggedIn) {
         setError("You must be signed in to view records.");
         setLoading(false);
         return;
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/records", {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error(`Server responded with ${res.status}`);
-        }
-
-        const data = await res.json();
-
-        if (!Array.isArray(data)) {
-          throw new Error("Unexpected response format");
-        }
-
-        setRecords(data);
+        // axios.defaults.baseURL = http://localhost:5000
+        // x-auth-token header is attached automatically by AuthContext
+        const res = await axios.get("/api/records");
+        setRecords(res.data);
       } catch (err) {
         console.error("Error fetching records:", err);
-        setError(err.message);
+        setError(err.response?.data?.error || err.message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchRecords();
-  }, [token]);
+  }, [isLoggedIn]);
 
   if (loading) return <p>Loading records…</p>;
   if (error)   return <p style={{ color: "red" }}>Error: {error}</p>;
 
   return (
     <div className="records-container">
-      <h1>Diagnosis Records</h1>
+      <h1>{user.name}’s Diagnosis Records</h1>
+
       {records.length === 0 ? (
         <p>No records found.</p>
       ) : (
