@@ -67,7 +67,7 @@ function Diagnose() {
             </p>
           )}
           <p className="drag-drop-formats">
-            JPEG, PNG, PDF, and MP4 formats, up to 500MB
+            .CSV files only
           </p>
           <label className="browse-btn">
             Browse File
