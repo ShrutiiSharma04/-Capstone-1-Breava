@@ -1,4 +1,3 @@
-// src/pages/Result.js
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -27,13 +26,26 @@ export default function Result() {
             The sample is diagnosed as:
           </Typography>
 
-          <Typography
-            variant="h5"
-            component="div"
-            sx={{ fontWeight: 700, mb: 4, color: 'primary.main' }}
-          >
-            {result.toUpperCase()}
-          </Typography>
+          {Array.isArray(result) ? (
+            result.map((r, idx) => (
+              <Typography
+                key={idx}
+                variant="h5"
+                component="div"
+                sx={{ fontWeight: 700, mb: 2, color: 'primary.main' }}
+              >
+                {r.toUpperCase()}
+              </Typography>
+            ))
+          ) : (
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ fontWeight: 700, mb: 4, color: 'primary.main' }}
+            >
+              {result.toUpperCase()}
+            </Typography>
+          )}
 
           <Box>
             <Button
