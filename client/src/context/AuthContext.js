@@ -5,18 +5,19 @@ import axios from 'axios';
 export const AuthContext = createContext();
 
 const API_BASE = 'http://localhost:5000';
+// Set the default base URL for all axios requests
+axios.defaults.baseURL = API_BASE;
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser]   = useState(null);
+  const [token, setToken]     = useState(localStorage.getItem('token'));
+  const [user, setUser]       = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Keep axios header in sync
+  // Sync token header and load user profile
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['x-auth-token'] = token;
-      // fetch user profile
-      axios.get(`${API_BASE}/api/auth/me`)
+      axios.get('/api/auth/me')
         .then(res => setUser(res.data))
         .catch(() => {
           setUser(null);
@@ -29,14 +30,15 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Helper to handle signup/signin flows
+  // Common handler for signin/signup
   const handleAuth = async (path, payload) => {
-    const res = await axios.post(`${API_BASE}/api/auth/${path}`, payload);
+    const res = await axios.post(`/api/auth/${path}`, payload);
     const newToken = res.data.token;
     setToken(newToken);
     localStorage.setItem('token', newToken);
-    // fetch user
-    const userRes = await axios.get(`${API_BASE}/api/auth/me`);
+    axios.defaults.headers.common['x-auth-token'] = newToken;
+
+    const userRes = await axios.get('/api/auth/me');
     setUser(userRes.data);
   };
 
