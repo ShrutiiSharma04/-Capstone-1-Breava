@@ -1,23 +1,52 @@
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+// src/pages/Result.js
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  Container,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box
+} from '@mui/material';
 
-function Result() {
+export default function Result() {
   const navigate = useNavigate();
   const location = useLocation();
-  // fall back to 'unknown' if nothing was passed
-  const { result = "unknown" } = location.state || {};
+  const { result = 'unknown' } = location.state || {};
 
   return (
-    <div className="result-container">
-      <h1>Diagnosis Result</h1>
-      <p>
-        The sample is diagnosed as: <strong>{result}</strong>
-      </p>
-      <button className="back-btn" onClick={() => navigate("/")}>
-        Back to Home
-      </button>
-    </div>
+    <Container maxWidth="sm" sx={{ py: 6 }}>
+      <Card elevation={3}>
+        <CardContent sx={{ textAlign: 'center' }}>
+          <Typography variant="h4" gutterBottom color="primary">
+            Diagnosis Result
+          </Typography>
+
+          <Typography variant="body1" sx={{ my: 3 }}>
+            The sample is diagnosed as:
+          </Typography>
+
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{ fontWeight: 700, mb: 4, color: 'primary.main' }}
+          >
+            {result.toUpperCase()}
+          </Typography>
+
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={() => navigate('/')}
+            >
+              Back to Home
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
-
-export default Result;
