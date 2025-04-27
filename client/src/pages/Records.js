@@ -1,57 +1,96 @@
 // src/pages/Records.js
-import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
+import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
+
+import {
+  Container,
+  Card,
+  CardContent,
+  Typography,
+  Alert,
+  Box,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText
+} from '@mui/material';
 
 export default function Records() {
   const { user, isLoggedIn } = useContext(AuthContext);
   const [records, setRecords] = useState([]);
-  const [error, setError]     = useState("");
+  const [error, setError]     = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecords = async () => {
       if (!isLoggedIn) {
-        setError("You must be signed in to view records.");
+        setError('You must be signed in to view records.');
         setLoading(false);
         return;
       }
-
       try {
-        // axios.defaults.baseURL = http://localhost:5000
-        // x-auth-token header is attached automatically by AuthContext
-        const res = await axios.get("/api/records");
+        const res = await axios.get('/api/records');
         setRecords(res.data);
       } catch (err) {
-        console.error("Error fetching records:", err);
+        console.error('Error fetching records:', err);
         setError(err.response?.data?.error || err.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchRecords();
   }, [isLoggedIn]);
 
-  if (loading) return <p>Loading records…</p>;
-  if (error)   return <p style={{ color: "red" }}>Error: {error}</p>;
+  // Loading state
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <div className="records-container">
-      <h1>{user.name}’s Diagnosis Records</h1>
+    <Container maxWidth="md" sx={{ py: 6 }}>
+      <Card elevation={3}>
+        <CardContent>
+          <Typography
+            variant="h4"
+            align="center"
+            gutterBottom
+            color="primary"
+          >
+            {user.name}’s Diagnosis Records
+          </Typography>
 
-      {records.length === 0 ? (
-        <p>No records found.</p>
-      ) : (
-        <ul>
-          {records.map((record) => (
-            <li key={record._id}>
-              <strong>{record.filename}</strong> — {record.result} —{" "}
-              {new Date(record.createdAt).toLocaleString()}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          {records.length === 0 ? (
+            <Typography variant="body1" align="center">
+              No records found.
+            </Typography>
+          ) : (
+            <List>
+              {records.map((record) => {
+                const date = new Date(record.createdAt).toLocaleString();
+                return (
+                  <ListItem key={record._id} divider>
+                    <ListItemText
+                      primary={record.filename}
+                      secondary={`${record.result} — ${date}`}
+                    />
+                  </ListItem>
+                );
+              })}
+            </List>
+          )}
+        </CardContent>
+      </Card>
+    </Container>
   );
 }

@@ -2,17 +2,22 @@
 .auth-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;              /* push card to the left */
   min-height: 100vh;
-  background: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
+  background: 
+    url('../assets/authBackground.png') no-repeat     /* adjust path if needed */
+    center center / cover;
+  padding-left: 4rem;                        /* gap from the left */
 }
 
 .auth-card {
-  background: #fff;
-  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);      /* translucent white */
+  padding: 3rem;
   border-radius: 0.5rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  width: 360px;
+  width: 450px;
+  max-width: 90%;
+  border: 1px solid rgba(0, 0, 0, 0.05);     /* soft border */
 }
 
 .auth-card h2 {
@@ -44,6 +49,7 @@
   margin-top: 1rem;
   font-size: 0.9rem;
 }
+
 .auth-card .footer a {
   color: #5151e5;
   text-decoration: none;
