@@ -49,14 +49,3 @@ joblib.dump(model, 'breast_cancer_nb_model.pkl')
 joblib.dump(scaler, 'scaler.pkl')
 
 print("\n✅ Training complete. Model and scaler saved successfully.")
-
-# Step 9: Example: test on new patient data
-new_patient_data = [[14.5, 20.4, 95.2, 658.9, 0.1, 0.2, 0.1, 0.05, 0.18, 0.06,
-                     0.4, 1.3, 2.9, 38.2, 0.006, 0.02, 0.03, 0.01, 0.018, 0.004,
-                     16.3, 27.1, 108.2, 819.1, 0.15, 0.4, 0.4, 0.13, 0.34, 0.09]]
-
-# Remember to scale new input data before prediction
-new_patient_scaled = scaler.transform(new_patient_data)
-new_prediction = model.predict(new_patient_scaled)
-
-print("\nNew Patient Prediction:", "Malignant" if new_prediction[0] == 1 else "Benign")
