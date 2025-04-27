@@ -5,46 +5,55 @@ import axios from 'axios';
 export const AuthContext = createContext();
 
 const API_BASE = 'http://localhost:5000';
-// Ensure all axios calls point to the backend
+// Set the default base URL for all axios requests
 axios.defaults.baseURL = API_BASE;
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken]     = useState(localStorage.getItem('token'));
+  const [user, setUser]       = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Whenever token changes, set or remove the auth header
+  // Sync token header and load user profile
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['x-auth-token'] = token;
+      axios.get('/api/auth/me')
+        .then(res => setUser(res.data))
+        .catch(() => {
+          setUser(null);
+          localStorage.removeItem('token');
+          delete axios.defaults.headers.common['x-auth-token'];
+        })
+        .finally(() => setLoading(false));
     } else {
-      delete axios.defaults.headers.common['x-auth-token'];
+      setLoading(false);
     }
   }, [token]);
 
-  // Sign in: store JWT
-  const login = async ({ email, password }) => {
-    const res = await axios.post('/api/auth/signin', { email, password });
-    const { token: newToken } = res.data;
+  // Common handler for signin/signup
+  const handleAuth = async (path, payload) => {
+    const res = await axios.post(`/api/auth/${path}`, payload);
+    const newToken = res.data.token;
     setToken(newToken);
     localStorage.setItem('token', newToken);
+    axios.defaults.headers.common['x-auth-token'] = newToken;
+
+    const userRes = await axios.get('/api/auth/me');
+    setUser(userRes.data);
   };
 
-  // Sign up: store JWT
-  const signup = async ({ name, email, password }) => {
-    const res = await axios.post('/api/auth/signup', { name, email, password });
-    const { token: newToken } = res.data;
-    setToken(newToken);
-    localStorage.setItem('token', newToken);
-  };
-
-  // Logout: clear JWT
+  const login  = creds => handleAuth('signin', creds);
+  const signup = data  => handleAuth('signup', data);
   const logout = () => {
     setToken(null);
+    setUser(null);
     localStorage.removeItem('token');
+    delete axios.defaults.headers.common['x-auth-token'];
   };
 
   return (
     <AuthContext.Provider
-      value={{ token, isLoggedIn: !!token, login, signup, logout }}
+      value={{ user, token, isLoggedIn: !!user, loading, login, signup, logout }}
     >
       {children}
     </AuthContext.Provider>
