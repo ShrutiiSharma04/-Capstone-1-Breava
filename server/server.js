@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const axios = require("axios");
+const FormData = require("form-data");
+const fs = require("fs");
 require("dotenv").config();
 
 const auth = require("./middleware/auth");
@@ -26,7 +29,7 @@ mongoose.connection.on("error", (err) => {
   console.error("MongoDB connection error:", err);
 });
 
-// Setup Multer for File Uploads
+// Setup Multer for File Uploads to disk
 const upload = multer({ dest: "uploads/" });
 
 // Auth Routes
@@ -37,26 +40,54 @@ app.get("/api", (req, res) => {
   res.json({ message: "Hello from the server!" });
 });
 
-// Protected Diagnose Endpoint
+// Protected Diagnose Endpoint: forward to Flask & save records
 app.post(
   "/api/diagnose",
   auth,
   upload.single("file"),
   async (req, res) => {
-    try {
-      const result = Math.random() < 0.5 ? "malignant" : "benign";
-      const filename = req.file ? req.file.originalname : "unknown_file";
+    if (!req.file) {
+      return res.status(400).json({ error: "no file uploaded" });
+    }
 
-      const newRecord = new Record({
+    const filePath = req.file.path;
+    try {
+      // Build form-data for Flask
+      const form = new FormData();
+      form.append("file", fs.createReadStream(filePath), req.file.originalname);
+
+      // Call Flask service
+      const flaskRes = await axios.post(
+        "http://localhost:8008/predict_csv",
+        form,
+        { headers: form.getHeaders() }
+      );
+      const results = flaskRes.data.results; // ['benign','malignant',...]
+
+      // Save each result as a separate Record
+      const recordDocs = results.map((r) => ({
         user: req.user.id,
-        filename,
-        result,
-      });
-      await newRecord.save();
-      res.json({ result });
+        filename: req.file.originalname,
+        result: r,
+      }));
+      await Record.insertMany(recordDocs);
+
+      // Return array to client
+      return res.json({ result: results });
     } catch (err) {
-      console.error("Error saving record:", err);
-      res.status(500).json({ error: "Failed to save record" });
+      // Log full details
+      console.error("Flask error status:", err.response?.status);
+      console.error("Flask error body:  ", err.response?.data);
+      // Forward the actual error message to client
+      const msg = err.response?.data?.error || err.message;
+      return res
+      .status(err.response?.status || 500)
+      .json({ error: msg });
+    } finally {
+      // Clean up uploaded file
+      fs.unlink(filePath, (unlinkErr) => {
+        if (unlinkErr) console.error("Failed to delete file:", unlinkErr);
+      });
     }
   }
 );
@@ -64,9 +95,7 @@ app.post(
 // Protected Get All Diagnosis Records
 app.get("/api/records", auth, async (req, res) => {
   try {
-    const records = await Record
-      .find({ user: req.user.id })
-      .sort({ createdAt: -1 });
+    const records = await Record.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.json(records);
   } catch (err) {
     console.error("Error fetching records:", err);
