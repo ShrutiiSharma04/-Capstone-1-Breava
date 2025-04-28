@@ -1,1 +1,0 @@
-export { Diagnose } from "./Diagnose";
