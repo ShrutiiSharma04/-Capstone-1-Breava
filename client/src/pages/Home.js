@@ -16,7 +16,7 @@ import womanImage from '../assets/woman.png'; // adjust path to your image
 const features = [
   {
     title: 'AI-Powered Analysis',
-    text: 'Advanced machine learning models (GVM, RNN, Fuzzy ESH-BP) for accurate results.'
+    text: 'Advanced machine learning model "Naive Bayes" with 96% accuracy.'
   },
   {
     title: 'Quick Results',

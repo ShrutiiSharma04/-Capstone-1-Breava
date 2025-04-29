@@ -58,7 +58,8 @@ app.post(
 
       // Call Flask service
       const flaskRes = await axios.post(
-        "http://localhost:8008/predict_csv",
+        // "http://localhost:8008/predict_csv"       NO
+        "http://127.0.0.1:8008/predict_csv",         //yes
         form,
         { headers: form.getHeaders() }
       );
