@@ -34,7 +34,7 @@ export default function Diagnose() {
     try {
       // axios.defaults.baseURL = http://localhost:5000
       // x-auth-token header is attached automatically by AuthContext
-      const res = await axios.post("/api/diagnose", formData, {
+      const res = await axios.post("http://localhost:5000/api/diagnose", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
