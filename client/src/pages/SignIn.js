@@ -17,10 +17,8 @@ export default function SignIn() {
     setError('');
     try {
       await login(form);
-      // only once login() resolves do we redirect:
       navigate('/', { replace: true });
     } catch (err) {
-      // show any backend message or generic
       setError(err.response?.data?.msg || 'Login failed');
     }
   };
@@ -28,8 +26,24 @@ export default function SignIn() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Login</h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {/* Breava text centered and enlarged */}
+        <h1
+          style={{
+            fontFamily: 'Lucida Sans',
+            fontWeight: 800,
+            fontSize: '3rem',
+            color: '#d81b60',
+            marginBottom: '0.2rem',
+            textAlign: 'center'
+          }}
+        >
+          Breava
+        </h1>
+
+        <h2 style={{ marginTop: 0, textAlign: 'center' }}>Login</h2>
+
+        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+
         <form onSubmit={onSubmit}>
           <input
             name="email"
@@ -49,9 +63,9 @@ export default function SignIn() {
           />
           <button type="submit">Login</button>
         </form>
+
         <div className="footer">
-          Not a member?
-          <Link to="/signup">Signup</Link>
+          Not a member? <Link to="/signup">Signup</Link>
         </div>
       </div>
     </div>

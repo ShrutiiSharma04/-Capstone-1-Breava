@@ -17,7 +17,6 @@ export default function SignUp() {
     setError('');
     try {
       await signup(form);
-      // navigate only after signup() resolves
       navigate('/', { replace: true });
     } catch (err) {
       setError(err.response?.data?.msg || 'Signup failed');
@@ -27,8 +26,24 @@ export default function SignUp() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Sign Up</h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {/* Breava branding */}
+        <h1
+          style={{
+            fontFamily:'Lucida Sans',
+            fontWeight: 800,
+            fontSize: '3rem',
+            color: '#d81b60',
+            marginBottom: '0.2rem',
+            textAlign: 'center'
+          }}
+        >
+          Breava
+        </h1>
+
+        <h2 style={{ marginTop: 0, textAlign: 'center' }}>Sign Up</h2>
+
+        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+
         <form onSubmit={onSubmit}>
           <input
             name="name"
@@ -55,9 +70,9 @@ export default function SignUp() {
           />
           <button type="submit">Sign Up</button>
         </form>
+
         <div className="footer">
-          Already have an account?
-          <Link to="/signin">Login</Link>
+          Already have an account? <Link to="/signin">Login</Link>
         </div>
       </div>
     </div>
