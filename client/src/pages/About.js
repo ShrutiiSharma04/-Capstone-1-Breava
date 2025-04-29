@@ -19,7 +19,7 @@ export default function About() {
         }}
       >
         <Typography variant="h3" gutterBottom color="primary">
-          About Breava Software
+          About Breava
         </Typography>
         <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 800, mx: 'auto' }}>
           Our breast cancer detection platform combines advanced machine learning model
