@@ -15,6 +15,7 @@ import About    from './pages/About';
 import Records  from './pages/Records';
 import Result   from './pages/Result';
 import ribbon from './assets/ribbon.png'; // adjust path as needed
+import breava from './assets/breava.png'; // adjust path as needed
 
 
 function Layout() {
@@ -30,6 +31,7 @@ function Layout() {
   {/* Logo Image */}
   <Box component={Link} to="/" sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', mr: 2 }}>
   <img src={ribbon} alt="Breava Logo" style={{ height: '60px', marginRight: '0px' }} />
+  <img src={breava} alt="Breava Logo" style={{ height: '40px', marginLeft: '0px' }} />
   </Box>
 
   {/* Brand Name */}
@@ -43,7 +45,7 @@ function Layout() {
       flexGrow: 1
     }}
   >
-    Breava
+
   </Typography>
 
             {/* Welcome – made larger & bolder */}

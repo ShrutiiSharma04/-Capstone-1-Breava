@@ -21,7 +21,7 @@ export default function About() {
         <Typography variant="h3" gutterBottom color="primary">
           About Breava
         </Typography>
-        <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 800, mx: 'auto' }}>
+        <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 800, mx: 'auto', textAlign:'justify' }}>
           Our breast cancer detection platform combines advanced machine learning model
           with medical expertise to provide accurate and reliable screening assistance.
           We utilize powerful algorithm:
