@@ -28,9 +28,13 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - MONGO_URI=mongodb://mongo:27017/yourdbname
+      - MONGO_URI=mongodb://mongo:27017/Breava
+      - JWT_SECRET=breava_secretkey22
+      - PORT=5000
+      - FLASK_URL=http://ml-service:8008
     depends_on:
       - mongo
+      - ml-service
     networks:
       - breava-net
 

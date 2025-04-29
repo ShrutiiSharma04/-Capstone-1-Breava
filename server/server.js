@@ -56,10 +56,10 @@ app.post(
       const form = new FormData();
       form.append("file", fs.createReadStream(filePath), req.file.originalname);
 
-      // Call Flask service
+      const FLASK_URL = process.env.FLASK_URL || "http://127.0.0.1:8008";
       const flaskRes = await axios.post(
         // "http://localhost:8008/predict_csv"       NO
-        "http://127.0.0.1:8008/predict_csv",         //yes
+        `${FLASK_URL}/predict_csv`,         //yes
         form,
         { headers: form.getHeaders() }
       );
