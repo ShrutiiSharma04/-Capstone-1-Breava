@@ -22,11 +22,13 @@ export default function About() {
           About Our Platform
         </Typography>
         <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 800, mx: 'auto' }}>
-          Our breast cancer detection platform combines advanced machine learning models
+          Our breast cancer detection platform combines advanced machine learning model
           with medical expertise to provide accurate and reliable screening assistance.
-          We utilize three powerful algorithms:
-          <strong> SVM</strong>, <strong>KNN</strong>, and <strong>Fuzzy ELM-RBE</strong>,
-          each bringing unique strengths to the detection process.
+          We utilize powerful algorithm:
+          <br />
+          <strong>Naive Bayes</strong>, which has been trained to extract features from Fine needle Aspiration(FNA) cytology data.
+          Breava caters effectively to approximately 70-80% (in developing countiers) of early breast cancer diagnostic cases, where FNA procedures are typically used to assess tumor malignancy.
+
         </Typography>
       </Box>
 
