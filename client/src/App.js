@@ -14,6 +14,8 @@ import Diagnose from './pages/Diagnose';
 import About    from './pages/About';
 import Records  from './pages/Records';
 import Result   from './pages/Result';
+import ribbon from './assets/ribbon.png'; // adjust path as needed
+
 
 function Layout() {
   const { user, isLoggedIn, logout } = useContext(AuthContext);
@@ -25,19 +27,24 @@ function Layout() {
       {!isAuthPage && (
         <AppBar position="static" color="default" elevation={1}>
           <Toolbar>
-            {/* Brand */}
-            <Typography
-              variant="h6"
-              component={Link}
-              to="/"
-              sx={{
-                textDecoration: 'none',
-                color: 'inherit',
-                flexGrow: 1
-              }}
-            >
-              Breava
-            </Typography>
+  {/* Logo Image */}
+  <Box component={Link} to="/" sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', mr: 2 }}>
+  <img src={ribbon} alt="Breava Logo" style={{ height: '60px', marginRight: '0px' }} />
+  </Box>
+
+  {/* Brand Name */}
+  <Typography
+    variant="h6"
+    component={Link}
+    to="/"
+    sx={{
+      textDecoration: 'none',
+      color: 'inherit',
+      flexGrow: 1
+    }}
+  >
+    Breava
+  </Typography>
 
             {/* Welcome – made larger & bolder */}
             {isLoggedIn && (
