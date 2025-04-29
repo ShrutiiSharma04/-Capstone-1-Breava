@@ -3,7 +3,6 @@ version: '3.8'
 services:
   mongo:
     image: mongo:6
-    container_name: mongo-container
     ports:
       - "27018:27017"
     volumes:
@@ -13,7 +12,6 @@ services:
 
   mongo-express:
     image: mongo-express
-    container_name: mongo-express-container
     ports:
       - "8082:8081"
     environment:
@@ -25,11 +23,12 @@ services:
 
   server:
     image: breava-capstone-server
-    container_name: breava-capstone-server
+    build:
+      context: ./server
     ports:
       - "5000:5000"
     environment:
-      - MONGO_URI=mongodb://mongo:27017/Breava
+      - MONGO_URI=mongodb://mongo:27017/yourdbname
     depends_on:
       - mongo
     networks:
@@ -37,11 +36,23 @@ services:
 
   client:
     image: breava-capstone-client
-    container_name: breava-capstone-client
+    build:
+      context: ./client
     ports:
       - "3000:3000"
     depends_on:
       - server
+    networks:
+      - breava-net
+
+  ml-service:
+    build:
+      context: ./ml_service
+      dockerfile: Dockerfile
+    ports:
+      - "8008:8008"
+    depends_on:
+      - mongo
     networks:
       - breava-net
 
