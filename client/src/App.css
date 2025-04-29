@@ -24,6 +24,12 @@ body {
   margin-left: auto;
 }
 
+.navbar a:hover {
+  color: #b22262; /* A pinkish shade */
+}
+
+
+
 /* Hero section */
 .home-container {
   text-align: center;
