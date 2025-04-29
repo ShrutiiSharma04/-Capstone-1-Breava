@@ -16,7 +16,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-PORT = 5000;
 // MongoDB Connection Setup
 const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/Breava";
 mongoose.connect(mongoURI, {
